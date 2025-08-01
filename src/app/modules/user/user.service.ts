@@ -1,8 +1,10 @@
+import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
-import { IAuthProvider, IUser } from "./user.interface";
+import AppError from "../../errorHelpers/AppError";
+import { IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from 'bcryptjs'
-
+import httpStatus from 'http-status-codes'
 const createUser = async (payload: Partial<IUser>) => {
     const { email, password, ...rest } = payload;
     const authProvider: IAuthProvider = { provider: "credentials", providerId: email as string }
@@ -27,7 +29,53 @@ const getAllUsers = async () => {
     }
 };
 
+const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
+    const isUserExist = await User.findById(userId);
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+    }
+
+    const isAdmin = decodedToken.role.includes(Role.ADMIN) || decodedToken.role.includes(Role.SUPER_ADMIN);
+    const isSelfUpdate = decodedToken.userId === userId;
+
+    if (!isAdmin && !isSelfUpdate) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update this user");
+    }
+
+    if (payload.role) {
+        if (!isAdmin) {
+            throw new AppError(httpStatus.FORBIDDEN, "Only Admins can update roles");
+        }
+
+        if (
+            payload.role.includes(Role.SUPER_ADMIN) &&
+            decodedToken.role.includes(Role.ADMIN)
+        ) {
+            throw new AppError(httpStatus.FORBIDDEN, "Only Super Admin can promote to SUPER_ADMIN");
+        }
+    }
+
+    if ((payload.isActive !== undefined || payload.isDeleted !== undefined) && !isAdmin) {
+        throw new AppError(httpStatus.FORBIDDEN, "Only Admins can update user status");
+    }
+
+    if (payload.password) {
+        payload.password = await bcryptjs.hash(
+            payload.password,
+            Number(envVars.BCRYPT_SALT_ROUND)
+        );
+    }
+
+    const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
+        new: true,
+        runValidators: true,
+    });
+
+    return newUpdatedUser;
+};
+
 export const UserServices = {
     createUser,
-    getAllUsers
+    getAllUsers,
+    updateUser
 }
