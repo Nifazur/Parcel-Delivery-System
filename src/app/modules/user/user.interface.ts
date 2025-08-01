@@ -3,7 +3,9 @@ import { Types } from "mongoose";
 export enum Role {
     SUPER_ADMIN = "SUPER_ADMIN",
     ADMIN = "ADMIN",
-    USER = "USER"
+    USER = "USER",
+    SENDER = "SENDER",
+    RECEIVER = "RECEIVER"
 }
 
 export enum IsActive {
@@ -17,6 +19,7 @@ export interface IAuthProvider {
     providerId: string;
 }
 
+
 export interface IUser {
     _id?: Types.ObjectId,
     name: string,
@@ -25,7 +28,7 @@ export interface IUser {
     password?: string,
     picture?: string,
     address?: string,
-    role: Role,
+    role: Role[],
     isActive?: IsActive,
     isDeleted?: boolean,
     auths: IAuthProvider[]

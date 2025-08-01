@@ -27,9 +27,9 @@ const userSchema = new Schema<IUser>({
         unique: true
     },
     role: {
-        type: String,
+        type: [String],
         enum: Object.values(Role),
-        default: Role.USER
+        default: [Role.USER]
     },
     isActive: {
         type: String,
