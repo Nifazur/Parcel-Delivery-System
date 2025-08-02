@@ -10,7 +10,11 @@ import expressSession from "express-session";
 import "./app/config/passport";
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: envVars.FRONTEND_URL,
+    credentials: true
+}))
+app.set("trust proxy", 1);
 
 app.use(cookieParser())
 
