@@ -10,10 +10,9 @@ router.get('/track/:trackingId', ParcelController.trackParcel);
 
 
 // User routes
-router.post('/create', checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.USER), ParcelController.createParcel);
-router.get('/:id', ParcelController.getParcelById);
-router.get('/my-parcel-history', checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.USER), ParcelController.getMyParcels);
-
+router.post('/create', checkAuth(...Object.values(Role)), ParcelController.createParcel);
+router.get('/my-parcel-history', checkAuth(...Object.values(Role)), ParcelController.getMyParcels);
+router.get('/:id',checkAuth(...Object.values(Role)), ParcelController.getParcelById);
 
 // Sender routes
 router.get('/sent', checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.SENDER), ParcelController.getMySentParcels);
