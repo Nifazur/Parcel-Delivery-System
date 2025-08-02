@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 
@@ -6,6 +7,8 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { ParcelService } from './parcel.service';
 import { JwtPayload } from 'jsonwebtoken';
+import AppError from '../../errorHelpers/AppError';
+import httpStatus from 'http-status-codes'
 
 
 const createParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -32,18 +35,37 @@ const createParcel = catchAsync(async (req: Request, res: Response, next: NextFu
 
 const getParcelById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
+
   const userId = (req.user as JwtPayload).userId;
   const userRole = (req.user as JwtPayload).role;
 
   const parcel = await ParcelService.getParcelById(id);
-  if (!parcel) throw new Error('Parcel not found');
+  if (!parcel){
+    throw new AppError(httpStatus.NOT_FOUND,'Parcel not found');
+  }
+
+  // Type guard functions
+  const getSenderId = (sender: any): string => {
+    if (typeof sender === 'string') return sender;
+    if (sender && sender._id) return sender._id.toString();
+    return sender.toString(); // fallback
+  };
+
+  const getReceiverId = (receiver: any): string => {
+    if (typeof receiver === 'string') return receiver;
+    if (receiver && receiver._id) return receiver._id.toString();
+    return receiver.toString(); // fallback
+  };
+
+  const senderId = getSenderId(parcel.sender);
+  const receiverId = getReceiverId(parcel.receiver);
 
   if (
     userRole !== 'admin' &&
-    parcel.sender._id.toString() !== userId &&
-    parcel.receiver._id.toString() !== userId
+    senderId !== userId &&
+    receiverId !== userId
   ) {
-    throw new Error('Unauthorized to view this parcel');
+    throw new AppError(httpStatus.UNAUTHORIZED,'Unauthorized to view this parcel');
   }
 
   sendResponse(res, {
@@ -57,7 +79,9 @@ const getParcelById = catchAsync(async (req: Request, res: Response, next: NextF
 const trackParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { trackingId } = req.params;
   const parcel = await ParcelService.getParcelByTrackingId(trackingId);
-  if (!parcel) throw new Error('Parcel not found with this tracking ID');
+  if (!parcel){
+    throw new AppError(httpStatus.NOT_FOUND,'Parcel not found with this tracking ID');
+  }
 
   const trackingInfo = {
     trackingId: parcel.trackingId,
@@ -214,7 +238,7 @@ const getMyParcels = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req.user as JwtPayload).userId;
     if (!userId) {
-      throw new Error("Unauthorized: User not found");
+      throw new AppError(httpStatus.UNAUTHORIZED,"Unauthorized: User not found");
     }
 
     const result = await ParcelService.getMyParcels(userId);
