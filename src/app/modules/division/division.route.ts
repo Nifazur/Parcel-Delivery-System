@@ -7,14 +7,14 @@ import { DivisionController } from './division.controller';
 
 const router = Router();
 
+router.get('/', DivisionController.getAllDivisions);
 
-// Admin only routes
 router.post('/register', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), DivisionController.createDivision);
+router.get('/:id', DivisionController.getDivisionById);
 router.put('/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), DivisionController.updateDivision);
 router.delete('/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), DivisionController.deleteDivision);
 
-// Public routes (for getting divisions when creating parcels)
-router.get('/', DivisionController.getAllDivisions);
-router.get('/:id', DivisionController.getDivisionById);
+
+
 
 export const DivisionRoutes = router;

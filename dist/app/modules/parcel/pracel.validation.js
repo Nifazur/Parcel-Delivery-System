@@ -1,11 +1,59 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParcelValidation = exports.updateParcelStatusZodSchema = exports.createParcelZodSchema = exports.parcelStatusEnum = void 0;
-const zod_1 = __importDefault(require("zod"));
-exports.parcelStatusEnum = zod_1.default.enum([
+exports.updateParcelStatusZodSchema = exports.parcelStatusEnum = exports.createParcelZodSchema = void 0;
+const zod_1 = require("zod");
+exports.createParcelZodSchema = zod_1.z.object({
+    type: zod_1.z
+        .string({
+        required_error: "Type is required",
+        invalid_type_error: "Type must be a string",
+    })
+        .min(1, { message: "Type cannot be empty" }),
+    weight: zod_1.z
+        .number({
+        required_error: "Weight is required",
+        invalid_type_error: "Weight must be a number",
+    })
+        .positive({ message: "Weight must be a positive number" }),
+    receiver: zod_1.z
+        .string({
+        required_error: "Receiver is required",
+        invalid_type_error: "Receiver must be a string",
+    })
+        .email("Invalid email address format.")
+        .min(2, { message: "Receiver name must be at least 2 characters long" })
+        .max(100, { message: "Receiver name cannot exceed 100 characters" }),
+    fromAddress: zod_1.z
+        .string({
+        required_error: "From address is required",
+        invalid_type_error: "From address must be a string",
+    })
+        .min(5, { message: "From address must be at least 5 characters long" })
+        .max(200, { message: "From address cannot exceed 200 characters" }),
+    toAddress: zod_1.z
+        .string({
+        required_error: "To address is required",
+        invalid_type_error: "To address must be a string",
+    })
+        .min(5, { message: "To address must be at least 5 characters long" })
+        .max(200, { message: "To address cannot exceed 200 characters" }),
+    division: zod_1.z
+        .string({
+        required_error: "Division is required",
+        invalid_type_error: "Division must be a string",
+    })
+        .min(2, { message: "Division must be at least 2 characters long" })
+        .max(100, { message: "Division cannot exceed 100 characters" }),
+    deliveryDate: zod_1.z
+        .union([
+        zod_1.z
+            .string()
+            .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid delivery date format" }),
+        zod_1.z.date()
+    ])
+        .optional(),
+});
+exports.parcelStatusEnum = zod_1.z.enum([
     "requested",
     "approved",
     "dispatched",
@@ -13,29 +61,7 @@ exports.parcelStatusEnum = zod_1.default.enum([
     "delivered",
     "cancelled",
 ]);
-exports.createParcelZodSchema = zod_1.default.object({
-    body: zod_1.default.object({
-        sender: zod_1.default
-            .string({ error: "Sender ID is required" }),
-        receiver: zod_1.default
-            .string({ error: "receiver ID is required" }),
-        weight: zod_1.default
-            .number({ error: "Weight must be a number" })
-            .positive("Weight must be a positive number"),
-        destination: zod_1.default
-            .string({ error: "Destination is required" })
-            .min(10, { error: "must be at least 10 characters long." })
-            .max(100, { error: "destination cannot exceed 100 characters" }),
-        price: zod_1.default
-            .number({ error: "Price must be a Number" })
-    })
+// Schema for updating parcel status
+exports.updateParcelStatusZodSchema = zod_1.z.object({
+    status: exports.parcelStatusEnum,
 });
-exports.updateParcelStatusZodSchema = zod_1.default.object({
-    body: zod_1.default.object({
-        status: exports.parcelStatusEnum,
-    }),
-});
-exports.ParcelValidation = {
-    createParcelZodSchema: exports.createParcelZodSchema,
-    updateParcelStatusZodSchema: exports.updateParcelStatusZodSchema,
-};
