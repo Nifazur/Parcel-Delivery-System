@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "8852c34f-2f3f-4b19-9e0c-2857256141a2",
+		"name": "Parcel Delivery System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "42490979",
+		"_collection_link": "https://www.postman.com/nahaz2872/workspace/parcel-delivery-system-api/collection/42490979-8852c34f-2f3f-4b19-9e0c-2857256141a2?action=share&source=collection_link&creator=42490979"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"securePassword123!\",\n  \"address\": \"Dhaka, Bangladesh\",\n  \"division\": \"Dhaka\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/user/all-users"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"bangladesh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/user/688e4b5797d3feca6d32d158"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "LogIn",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"najat@gmail.com\",\n    \"password\": \"Nahaz123415!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Log Out",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/auth/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "New Access Token / Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/auth/refresh-token"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"12345678\",\n    \"newPassword\": \"Nahaz1234??\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://parcel-delivery-system-black.vercel.app/api/v1/auth/reset-password"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Division",
+			"item": [
+				{
+					"name": "create division",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Chittagong\",\n  \"basePrice\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:4000/api/v1/division/register"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Parcel",
+			"item": [
+				{
+					"name": "Admin Routes",
+					"item": [
+						{
+							"name": "Get All Parcel",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/all?status=requested&page=1&limit=5",
+									"protocol": "https",
+									"host": [
+										"parcel-delivery-system-black",
+										"vercel",
+										"app"
+									],
+									"path": [
+										"api",
+										"v1",
+										"parcel",
+										"all"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "requested"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Status",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"dispatched\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/status/688e313dbb13465f494f3016"
+							},
+							"response": []
+						},
+						{
+							"name": "Parcel statistics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/admin/statistics"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Public Route",
+					"item": [
+						{
+							"name": "Track Parcel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/track/TRK-20250802-IEPB5V"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Sender Routes",
+					"item": [
+						{
+							"name": "Get all parcels sent by the sender.",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/sent"
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Parcel By Id",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:4000/api/v1/parcel/cancel/688e4195ac0cd0e3b7b67650"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Routes",
+					"item": [
+						{
+							"name": "create parcel",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"document\",\n  \"weight\": 2,\n  \"receiver\": \"nahaz@gmail.com\", // Receiver user ID (MongoDB ObjectId)\n  \"fromAddress\": \"123 Gulshan Ave, Dhaka\",\n  \"toAddress\": \"456 Agrabad, Dhaka\",\n  \"division\": \"Dhaka\",\n  \"deliveryDate\": \"2025-08-05\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/create"
+							},
+							"response": []
+						},
+						{
+							"name": "My Parcel History",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/my-parcel-history"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Parcel by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/688e3ef4961474ab97d2b529"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Receiver Routes",
+					"item": [
+						{
+							"name": "Confirm Delivery",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{vault:json-web-token}}",
+										"type": "text"
+									}
+								],
+								"url": "https://parcel-delivery-system-black.vercel.app/api/v1/parcel/confirm-delivery/688e41c2ac0cd0e3b7b6765f"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://parcel-delivery-system-black.vercel.app",
+			"type": "default"
+		}
+	]
+}
