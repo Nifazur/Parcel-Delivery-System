@@ -3,6 +3,7 @@ import { UserRoutes } from "../modules/user/user.route"
 import { AuthRoutes } from "../modules/auth/auth.route"
 import { DivisionRoutes } from "../modules/division/division.route"
 import { ParcelRoutes } from "../modules/parcel/parcel.route"
+import { ContactUsRoutes } from "../modules/contactUs/contactUs.route"
 
 export const router = Router()
 const moduleRoutes = [
@@ -21,6 +22,10 @@ const moduleRoutes = [
     {
         path: "/parcel",
         route: ParcelRoutes
+    },
+    {
+        path: "/contact-us",
+        route: ContactUsRoutes
     }
 ]
 
