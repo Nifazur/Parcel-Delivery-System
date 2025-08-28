@@ -11,7 +11,7 @@ import "./app/config/passport";
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin: envVars.FRONTEND_URL,
+    origin: [envVars.FRONTEND_URL, "https://parcel-delivery-system-client-omega.vercel.app"],
     credentials: true
 }))
 app.set("trust proxy", 1);

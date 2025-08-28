@@ -68,10 +68,10 @@ const createParcel = async (parcelData: ICreateParcelRequest, senderId: string) 
 };
 
 const getParcelById = async (id: string) => {
-    return await Parcel.findById(id)
-        .populate('sender', 'name email phone')
-        .populate('receiver', 'name email phone')
-        .populate('division', 'name basePrice');
+  return await Parcel.findById(id)
+    .populate('sender', '_id name email phone')
+    .populate('receiver', '_id name email phone')
+    .populate('division', 'name basePrice');
 };
 
 const getParcelByTrackingId = async (trackingId: string) => {

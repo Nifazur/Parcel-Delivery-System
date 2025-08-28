@@ -37,7 +37,7 @@ const getParcelById = catchAsync(async (req: Request, res: Response, next: NextF
   const { id } = req.params;
 
   const userId = (req.user as JwtPayload).userId;
-  const userRole = (req.user as JwtPayload).role;
+  const userRole = (req.user as JwtPayload).role; 
 
   const parcel = await ParcelService.getParcelById(id);
   if (!parcel){
@@ -60,13 +60,16 @@ const getParcelById = catchAsync(async (req: Request, res: Response, next: NextF
   const senderId = getSenderId(parcel.sender);
   const receiverId = getReceiverId(parcel.receiver);
 
-  if (
-    userRole !== 'admin' &&
-    senderId !== userId &&
-    receiverId !== userId
-  ) {
-    throw new AppError(httpStatus.UNAUTHORIZED,'Unauthorized to view this parcel');
-  }
+  const roles = Array.isArray(userRole) ? userRole : [userRole];
+
+if (
+  !roles.includes('ADMIN') &&
+  !roles.includes('SUPER_ADMIN') &&
+  senderId !== userId &&
+  receiverId !== userId
+) {
+  throw new AppError(httpStatus.UNAUTHORIZED,'Unauthorized to view this parcel');
+}
 
   sendResponse(res, {
     success: true,

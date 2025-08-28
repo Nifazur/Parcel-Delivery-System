@@ -111,7 +111,7 @@ const googleCallbackController = (0, catchAsync_1.catchAsync)((req, res, next) =
     if (!user) {
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User Not Found");
     }
-    const tokenInfo = (0, userTokens_1.createUserTokens)(user);
+    const tokenInfo = yield (0, userTokens_1.createUserTokens)(user);
     (0, setCookie_1.setAuthCookie)(res, tokenInfo);
     res.redirect(`${env_1.envVars.FRONTEND_URL}/${redirectTo}`);
 }));
