@@ -62,7 +62,9 @@ const getParcelById = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
     };
     const senderId = getSenderId(parcel.sender);
     const receiverId = getReceiverId(parcel.receiver);
-    if (userRole !== 'admin' &&
+    const roles = Array.isArray(userRole) ? userRole : [userRole];
+    if (!roles.includes('ADMIN') &&
+        !roles.includes('SUPER_ADMIN') &&
         senderId !== userId &&
         receiverId !== userId) {
         throw new AppError_1.default(http_status_codes_1.default.UNAUTHORIZED, 'Unauthorized to view this parcel');

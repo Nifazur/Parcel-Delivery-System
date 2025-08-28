@@ -68,8 +68,8 @@ const createParcel = (parcelData, senderId) => __awaiter(void 0, void 0, void 0,
 });
 const getParcelById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return yield parcel_model_1.Parcel.findById(id)
-        .populate('sender', 'name email phone')
-        .populate('receiver', 'name email phone')
+        .populate('sender', '_id name email phone')
+        .populate('receiver', '_id name email phone')
         .populate('division', 'name basePrice');
 });
 const getParcelByTrackingId = (trackingId) => __awaiter(void 0, void 0, void 0, function* () {
