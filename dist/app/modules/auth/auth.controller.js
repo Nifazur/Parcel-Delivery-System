@@ -70,22 +70,37 @@ const getNewAccessToken = (0, catchAsync_1.catchAsync)((req, res, next) => __awa
         data: tokenInfo
     });
 }));
+// const logOut = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+//     res.clearCookie("accessToken", {
+//         httpOnly: true,
+//         secure: false,
+//         sameSite: "lax"
+//     })
+//     res.clearCookie("refreshToken", {
+//         httpOnly: true,
+//         secure: false,
+//         sameSite: "lax"
+//     })
+//     sendResponse(res, {
+//         statusCode: httpStatus.OK,
+//         success: true,
+//         message: "User Log out Successfully",
+//         data: []
+//     })
+// })
 const logOut = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.clearCookie("accessToken", {
+    const cookieOptions = {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    });
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    });
+        secure: true,
+        sameSite: env_1.envVars.NODE_ENV === "production" ? "none" : "lax",
+    };
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_codes_1.default.OK,
         success: true,
         message: "User Log out Successfully",
-        data: []
+        data: [],
     });
 }));
 const resetPassword = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

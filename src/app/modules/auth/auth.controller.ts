@@ -60,26 +60,44 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
         data: tokenInfo
     })
 })
-const logOut = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+// const logOut = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    res.clearCookie("accessToken", {
+//     res.clearCookie("accessToken", {
+//         httpOnly: true,
+//         secure: false,
+//         sameSite: "lax"
+//     })
+//     res.clearCookie("refreshToken", {
+//         httpOnly: true,
+//         secure: false,
+//         sameSite: "lax"
+//     })
+
+//     sendResponse(res, {
+//         statusCode: httpStatus.OK,
+//         success: true,
+//         message: "User Log out Successfully",
+//         data: []
+//     })
+// })
+
+const logOut = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const cookieOptions: import("express").CookieOptions = {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
+        secure: true,
+        sameSite: envVars.NODE_ENV === "production" ? "none" : "lax" as "none" | "lax",
+    };
+
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "User Log out Successfully",
-        data: []
-    })
-})
+        data: [],
+    });
+});
 
 const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const oldPassword = req.body.oldPassword;

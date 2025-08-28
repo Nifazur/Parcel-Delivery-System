@@ -18,11 +18,19 @@ app.set("trust proxy", 1);
 
 app.use(cookieParser())
 
-app.use(expressSession({
+app.use(
+  expressSession({
     secret: envVars.EXPRESS_SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
-}))
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: envVars.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000
+    }
+  })
+);
 app.use(passport.initialize())
 app.use(passport.session())
 

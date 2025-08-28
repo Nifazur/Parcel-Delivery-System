@@ -24,7 +24,13 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     secret: env_1.envVars.EXPRESS_SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: env_1.envVars.NODE_ENV === "production",
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
